@@ -1,0 +1,22 @@
+{
+  "name": "maple2-packetlib-ts",
+  "version": "1.0.0",
+  "author": "angelotadeucci",
+  "license": "MIT",
+  "description": "MapleStory2 Packet Library in TypeScript",
+  "main": "dist/index.js",
+  "bin": {
+    "maple2-packetlib-ts": "dist/bin.js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@picode/binary-reader": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2"
+  },
+  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
+}
