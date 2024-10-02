@@ -26,9 +26,10 @@ export default async function duplicateFinder(
       hashes[hash] = [file];
     }
 
-    console.log(`Processed ${i}/${msbFiles.length}`);
+    process.stdout.write(`Processed ${i}/${msbFiles.length}\r`);
     i++;
   }
+  process.stdout.write("\n");
 
   const duplicates = Object.values(hashes).filter((files) => files.length > 1);
 

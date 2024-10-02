@@ -33,7 +33,7 @@ export const createMetadataCache = async (folderPath: string) => {
 
   let i = 1;
   for (const file of msbFiles) {
-    console.log(`Reading metadata for ${file} ... ${i}/${msbFiles.length}`);
+    process.stdout.write(`Processing ${i}/${msbFiles.length} ...\r`);
     i++;
 
     const reader = new MsbReader(file);
@@ -100,6 +100,7 @@ export const createMetadataCache = async (folderPath: string) => {
       packets: cachePackets,
     });
   }
+  process.stdout.write("\n");
 
   console.log("Finished reading all files");
 
