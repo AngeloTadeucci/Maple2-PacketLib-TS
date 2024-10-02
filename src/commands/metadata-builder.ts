@@ -1,7 +1,5 @@
-import { unlink, readdir, stat, writeFile } from "node:fs/promises";
-import { join } from "path";
+import { unlink, writeFile } from "node:fs/promises";
 import MsbReader from "../tools/file-loader";
-import { statSync } from "node:fs";
 import { getAllFiles, hashFile } from "../utils/helpers";
 
 interface MetadataCache {
@@ -17,7 +15,7 @@ interface Packet {
   modes: number[];
 }
 
-export const createMetadataCache = async (folderPath: string) => {
+export async function createMetadataCache(folderPath: string): Promise<void> {
   const allFiles = await getAllFiles(folderPath);
 
   const msbFiles = allFiles.filter((file) => file.endsWith(".msb"));
@@ -36,9 +34,10 @@ export const createMetadataCache = async (folderPath: string) => {
 
     const reader = new MsbReader(file);
 
-    const version = reader.version;
+    const version = reader.metadata?.Build;
     const filePackets = reader.readPackets();
     if (!filePackets || !version) {
+      console.log(`Failed to read packets for ${file}`);
       continue;
     }
 
@@ -118,4 +117,4 @@ export const createMetadataCache = async (folderPath: string) => {
   }
 
   await writeFile(metadataCacheFile, JSON.stringify(metadataCache, null, 2));
-};
+}

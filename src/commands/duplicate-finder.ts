@@ -45,7 +45,7 @@ export default async function duplicateFinder(
   console.log(`Found ${duplicates.length} duplicates`);
 
   if (!deleteDuplicates) {
-    return;
+    process.exit(1);
   }
 
   for await (const files of duplicates) {
