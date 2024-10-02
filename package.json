@@ -6,7 +6,7 @@
   "description": "MapleStory2 Packet Library in TypeScript",
   "main": "dist/index.js",
   "bin": {
-    "maple2-packetlib-ts": "dist/bin.js"
+    "maple2-packetlib-ts": "dist/commands/bin.js"
   },
   "scripts": {
     "build": "tsc"

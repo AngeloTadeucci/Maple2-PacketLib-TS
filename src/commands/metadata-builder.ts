@@ -1,10 +1,12 @@
 import { unlink, readdir, stat, writeFile } from "node:fs/promises";
 import { join } from "path";
-import MsbReader from "./file-loader";
+import MsbReader from "../tools/file-loader";
 import { statSync } from "node:fs";
+import { getAllFiles, hashFile } from "../utils/helpers";
 
 interface MetadataCache {
   path: string;
+  hash: string;
   version: number;
   packets: { [key: string]: Packet };
 }
@@ -15,26 +17,7 @@ interface Packet {
   modes: number[];
 }
 
-async function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
-  const files = await readdir(dirPath, {
-    recursive: true,
-  });
-
-  files.forEach((file) => {
-    const fullPath = join(dirPath, file);
-
-    if (statSync(fullPath).isDirectory()) {
-      getAllFiles(fullPath, arrayOfFiles);
-    } else {
-      arrayOfFiles.push(fullPath);
-    }
-  });
-
-  return arrayOfFiles;
-}
-
 export const createMetadataCache = async (folderPath: string) => {
-  // get all files in directory
   const allFiles = await getAllFiles(folderPath);
 
   const msbFiles = allFiles.filter((file) => file.endsWith(".msb"));
@@ -108,8 +91,11 @@ export const createMetadataCache = async (folderPath: string) => {
       }
     }
 
+    const hash = await hashFile(file);
+
     metadataCache.push({
       path: file,
+      hash,
       version,
       packets: cachePackets,
     });
