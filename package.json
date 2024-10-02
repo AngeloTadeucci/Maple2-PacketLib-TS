@@ -9,6 +9,9 @@
   "bin": {
     "maple2-packetlib-ts": "dist/commands/bin.js"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build": "tsc"
   },
