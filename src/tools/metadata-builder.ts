@@ -16,7 +16,9 @@ interface Packet {
 }
 
 async function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
-  const files = await readdir(dirPath);
+  const files = await readdir(dirPath, {
+    recursive: true,
+  });
 
   files.forEach((file) => {
     const fullPath = join(dirPath, file);
