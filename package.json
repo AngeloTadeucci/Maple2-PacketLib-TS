@@ -1,9 +1,10 @@
 {
   "name": "maple2-packetlib-ts",
   "version": "1.0.0",
-  "author": "angelotadeucci",
+  "author": "Ângelo Tadeucci",
   "license": "MIT",
   "description": "MapleStory2 Packet Library in TypeScript",
+  "repository": "https://github.com/AngeloTadeucci/Maple2-PacketLib-TS",
   "main": "dist/index.js",
   "bin": {
     "maple2-packetlib-ts": "dist/commands/bin.js"
