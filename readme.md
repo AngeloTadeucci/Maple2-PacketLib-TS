@@ -12,6 +12,8 @@ Maple2-PacketLib-TS is a TypeScript library designed to read and parse MapleShar
 
 ## NPM
 
+https://www.npmjs.com/package/maple2-packetlib-ts
+
 `pnpm install maple2-packetlib-ts`
 
 ## Installation
