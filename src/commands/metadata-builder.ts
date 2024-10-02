@@ -27,8 +27,6 @@ export const createMetadataCache = async (folderPath: string) => {
     return;
   }
 
-  console.log(`Found ${msbFiles.length} MSB files`);
-
   const metadataCache: MetadataCache[] = [];
 
   let i = 1;
