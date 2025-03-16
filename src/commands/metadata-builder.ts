@@ -1,6 +1,7 @@
 import { unlink, writeFile } from "node:fs/promises";
 import MsbReader from "../tools/file-loader";
 import { getAllFiles, hashFile } from "../utils/helpers";
+import path from "node:path";
 
 interface MetadataCache {
   path: string;
@@ -70,7 +71,9 @@ export async function createMetadataCache(folderPath: string): Promise<void> {
         continue;
       }
 
-      const key = `${packet.opcode}-${packet.outbound}`;
+      const key = `${packet.opcode}-${
+        packet.outbound ? "outbound" : "inbound"
+      }`;
       const existingPacket = cachePackets[key];
 
       const mode = packet.readByte();
@@ -107,8 +110,11 @@ export async function createMetadataCache(folderPath: string): Promise<void> {
     return;
   }
 
-  // check if metadata cache file exists
-  const metadataCacheFile = "metadata-cache.json";
+  // Determine the correct folder path for the metadata file
+  const targetPath = folderPath === "." ? process.cwd() : folderPath;
+  const metadataCacheFile = path.join(targetPath, "metadata-cache.json");
+
+  // Check if metadata cache file exists in the target directory
   const metadataCacheFileExists = allFiles.includes(metadataCacheFile);
 
   if (metadataCacheFileExists) {
@@ -116,5 +122,5 @@ export async function createMetadataCache(folderPath: string): Promise<void> {
     await unlink(metadataCacheFile);
   }
 
-  await writeFile(metadataCacheFile, JSON.stringify(metadataCache, null, 2));
+  await writeFile(metadataCacheFile, JSON.stringify(metadataCache));
 }

@@ -23,8 +23,12 @@ const commands: { [key: string]: Command } = {
       "Find and optionally delete duplicate files in the given folder",
     howTo: "duplicate-finder <folder-path> [--delete]",
     execute: async (folderPath: string, args: string[]) => {
-      const deleteDuplicates = args.includes("--delete");
-      await duplicateFinder(folderPath, deleteDuplicates);
+      const deleteDuplicates = args.includes("--delete") || args.includes("-d");
+      const dryRun = args.includes("--dry-run") || args.includes("-dr");
+      const commitHash = args
+        .find((arg) => arg.startsWith("--commit=") || arg.startsWith("-c="))
+        ?.split("=")[1];
+      await duplicateFinder(folderPath, deleteDuplicates, dryRun, commitHash);
     },
   },
   "version-finder": {
