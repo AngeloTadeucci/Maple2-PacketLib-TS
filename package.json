@@ -1,6 +1,6 @@
 {
   "name": "maple2-packetlib-ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Ângelo Tadeucci",
   "license": "MIT",
   "description": "MapleStory2 Packet Library in TypeScript",
