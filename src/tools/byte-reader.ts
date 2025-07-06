@@ -55,41 +55,28 @@ export default class ByteReader {
 
   public readShort(): number {
     this.checkLength(2);
-    const value = new DataView(this.buffer.buffer, this.position, 2).getInt16(
-      0,
-      true
-    );
+    const value = new DataView(this.buffer.buffer, this.buffer.byteOffset + this.position, 2).getInt16(0, true);
     this.position += 2;
     return value;
   }
 
   public readInt(): number {
     this.checkLength(4);
-    const value = new DataView(this.buffer.buffer, this.position, 4).getInt32(
-      0,
-      true
-    );
+    const value = new DataView(this.buffer.buffer, this.buffer.byteOffset + this.position, 4).getInt32(0, true);
     this.position += 4;
     return value;
   }
 
   public readFloat(): number {
     this.checkLength(4);
-    const value = new DataView(this.buffer.buffer, this.position, 4).getFloat32(
-      0,
-      true
-    );
+    const value = new DataView(this.buffer.buffer, this.buffer.byteOffset + this.position, 4).getFloat32(0, true);
     this.position += 4;
     return value;
   }
 
   public readLong(): bigint {
     this.checkLength(8);
-    const value = new DataView(
-      this.buffer.buffer,
-      this.position,
-      8
-    ).getBigInt64(0, true);
+    const value = new DataView(this.buffer.buffer, this.buffer.byteOffset + this.position, 8).getBigInt64(0, true);
     this.position += 8;
     return value;
   }
@@ -105,9 +92,7 @@ export default class ByteReader {
     }
 
     this.checkLength(length);
-    const value = new TextDecoder("utf-8").decode(
-      this.buffer.slice(this.position, this.position + length)
-    );
+    const value = new TextDecoder("utf-8").decode(this.buffer.slice(this.position, this.position + length));
     this.position += length;
     return value;
   }
@@ -123,9 +108,7 @@ export default class ByteReader {
     }
 
     this.checkLength(length * 2);
-    const value = new TextDecoder("utf-16le").decode(
-      this.buffer.slice(this.position, this.position + length * 2)
-    );
+    const value = new TextDecoder("utf-16le").decode(this.buffer.slice(this.position, this.position + length * 2));
     this.position += length * 2;
     return value;
   }

@@ -1,6 +1,6 @@
 {
   "name": "maple2-packetlib-ts",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Ângelo Tadeucci",
   "license": "MIT",
   "description": "MapleStory2 Packet Library in TypeScript",
@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/commands/bin.ts"
+    "dev": "tsx src/commands/bin.ts",
+    "publish": "pnpm build && pnpm publish"
   },
   "dependencies": {
     "@picode/binary-reader": "^1.0.0"
