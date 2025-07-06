@@ -77,6 +77,34 @@ export default class MaplePacket {
     return this.reader.readByte();
   }
 
+  readBool(): boolean {
+    return this.reader.readBool();
+  }
+
+  readShort(): number {
+    return this.reader.readShort();
+  }
+
+  readInt(): number {
+    return this.reader.readInt();
+  }
+
+  readLong(): bigint {
+    return this.reader.readLong();
+  }
+
+  readFloat(): number {
+    return this.reader.readFloat();
+  }
+
+  readString(): string {
+    return this.reader.readString();
+  }
+
+  readUnicodeString(): string {
+    return this.reader.readUnicodeString();
+  }
+
   readBytes(count: number): Uint8Array {
     return this.reader.readBytes(count);
   }
