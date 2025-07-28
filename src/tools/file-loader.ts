@@ -1,7 +1,7 @@
-import { BinaryReader } from "@picode/binary-reader";
-import { readFileSync } from "fs";
-import { MapleLocale } from "./maple-locale";
-import MaplePacket from "./maple-packet";
+import { BinaryReader } from '@picode/binary-reader';
+import { readFileSync } from 'fs';
+import { MapleLocale } from './maple-locale';
+import MaplePacket from './maple-packet';
 
 /**
  * Class representing an MSB file reader.
@@ -29,7 +29,7 @@ export default class MsbReader {
 
   constructor(filePath: string) {
     if (!filePath) {
-      throw new Error("Invalid file path");
+      throw new Error('Invalid file path');
     }
     const fileBuffer = readFileSync(filePath);
     this.reader = new BinaryReader(fileBuffer);
@@ -51,7 +51,7 @@ export default class MsbReader {
     }
 
     if (this.version === undefined || this.metadata === undefined) {
-      throw new Error("Metadata not initialized!?");
+      throw new Error('Metadata not initialized!?');
     }
 
     const packets: MaplePacket[] = [];
@@ -59,10 +59,7 @@ export default class MsbReader {
     try {
       while (this.reader.offset < this.reader.binary.length) {
         const timestamp = this.reader.readUint64();
-        let size =
-          this.version < 0x2027
-            ? this.reader.readUint16()
-            : this.reader.readInt32();
+        let size = this.version < 0x2027 ? this.reader.readUint16() : this.reader.readInt32();
         const opcode = this.reader.readUint16();
         let outbound: boolean;
 
@@ -79,18 +76,11 @@ export default class MsbReader {
           this.reader.readUint32(); // postDecodeIV
         }
 
-        const msSinceUnixEpoch =
-          (timestamp - this.TICKS_AT_EPOCH) / this.TICKS_PER_MILLISECOND;
+        const msSinceUnixEpoch = (timestamp - this.TICKS_AT_EPOCH) / this.TICKS_PER_MILLISECOND;
 
         const date = new Date(Number(msSinceUnixEpoch));
 
-        const packet = new MaplePacket(
-          date,
-          outbound,
-          this.metadata.Build,
-          opcode,
-          buffer
-        );
+        const packet = new MaplePacket(date, outbound, this.metadata.Build, opcode, buffer);
         packets.push(packet);
       }
     } catch (error) {
@@ -159,9 +149,7 @@ export default class MsbReader {
 
   private readString(): string {
     const length = this.reader.readUint8();
-    const str = this.reader.binary
-      .slice(this.reader.offset, this.reader.offset + length)
-      .toString();
+    const str = this.reader.binary.slice(this.reader.offset, this.reader.offset + length).toString();
     this.reader.offset += length;
     return str;
   }
@@ -176,9 +164,9 @@ export class MsbMetadata {
   public Build: number;
 
   constructor() {
-    this.LocalEndpoint = "";
+    this.LocalEndpoint = '';
     this.LocalPort = 0;
-    this.RemoteEndpoint = "";
+    this.RemoteEndpoint = '';
     this.RemotePort = 0;
     this.Locale = 0;
     this.Build = 0;

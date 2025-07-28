@@ -50,28 +50,28 @@ export default class ByteWriter {
   }
 
   private sizeOf<T>(value: T): number {
-    if (typeof value === "number") {
+    if (typeof value === 'number') {
       return 4; // Assuming 32-bit integer
-    } else if (typeof value === "boolean") {
+    } else if (typeof value === 'boolean') {
       return 1;
-    } else if (typeof value === "string") {
+    } else if (typeof value === 'string') {
       return value.length * 2; // UTF-16
     } else {
-      throw new Error("Unsupported type");
+      throw new Error('Unsupported type');
     }
   }
 
   private writeValue<T>(view: DataView, value: T): void {
-    if (typeof value === "number") {
+    if (typeof value === 'number') {
       view.setInt32(0, value as number, true);
-    } else if (typeof value === "boolean") {
+    } else if (typeof value === 'boolean') {
       view.setUint8(0, value ? 1 : 0);
-    } else if (typeof value === "string") {
+    } else if (typeof value === 'string') {
       for (let i = 0; i < (value as string).length; i++) {
         view.setUint16(i * 2, (value as string).charCodeAt(i), true);
       }
     } else {
-      throw new Error("Unsupported type");
+      throw new Error('Unsupported type');
     }
   }
 
@@ -79,11 +79,7 @@ export default class ByteWriter {
     this.writeBytesWithOffset(value, 0, value.length);
   }
 
-  public writeBytesWithOffset(
-    value: Uint8Array,
-    offset: number,
-    length: number
-  ): void {
+  public writeBytesWithOffset(value: Uint8Array, offset: number, length: number): void {
     if (length === 0) {
       return;
     }
@@ -127,7 +123,7 @@ export default class ByteWriter {
     this.length += 8;
   }
 
-  public writeString(value: string = ""): void {
+  public writeString(value: string = ''): void {
     this.writeShort(value.length);
     this.writeRawString(value);
   }
@@ -144,7 +140,7 @@ export default class ByteWriter {
     }
   }
 
-  public writeUnicodeString(value: string = ""): void {
+  public writeUnicodeString(value: string = ''): void {
     this.writeShort(value.length);
     this.writeRawUnicodeString(value);
   }
@@ -157,11 +153,7 @@ export default class ByteWriter {
 
     this.ensureCapacity(length);
     for (let i = 0; i < value.length; i++) {
-      new DataView(this.buffer.buffer).setUint16(
-        this.length + i * 2,
-        value.charCodeAt(i),
-        true
-      );
+      new DataView(this.buffer.buffer).setUint16(this.length + i * 2, value.charCodeAt(i), true);
     }
     this.length += length;
   }
@@ -172,7 +164,7 @@ export default class ByteWriter {
 
   public toString(): string {
     return Array.from(this.buffer.subarray(0, this.length))
-      .map((byte) => byte.toString(16).padStart(2, "0"))
-      .join(" ");
+      .map(byte => byte.toString(16).padStart(2, '0'))
+      .join(' ');
   }
 }

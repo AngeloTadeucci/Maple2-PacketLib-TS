@@ -1,8 +1,8 @@
-import { execSync } from "child_process";
-import { existsSync } from "fs";
-import { unlink } from "fs/promises";
-import * as path from "path";
-import { getAllFiles, hashFile } from "../utils/helpers";
+import { execSync } from 'child_process';
+import { existsSync } from 'fs';
+import { unlink } from 'fs/promises';
+import * as path from 'path';
+import { getAllFiles, hashFile } from '../utils/helpers';
 
 function commitExists(commitHash: string, repoPath: string): boolean {
   try {
@@ -21,28 +21,27 @@ function getFilesAddedInCommit(commitHash: string, repoPath: string): string[] {
 
   try {
     // Get the git root directory
-    const gitRootDir = execSync("git rev-parse --show-toplevel", {
+    const gitRootDir = execSync('git rev-parse --show-toplevel', {
       cwd: repoPath,
     })
       .toString()
       .trim();
 
-    const result = execSync(
-      `git diff-tree --no-commit-id --name-only --diff-filter=A -r ${commitHash}`,
-      { cwd: repoPath }
-    );
+    const result = execSync(`git diff-tree --no-commit-id --name-only --diff-filter=A -r ${commitHash}`, {
+      cwd: repoPath,
+    });
 
     // Convert git paths (relative to git root) to absolute paths
     return result
       .toString()
       .trim()
-      .split("\n")
-      .filter((line) => line.length > 0)
-      .filter((file) => file.endsWith(".msb"))
-      .map((file) => path.resolve(gitRootDir, file))
-      .filter((file) => existsSync(file));
+      .split('\n')
+      .filter(line => line.length > 0)
+      .filter(file => file.endsWith('.msb'))
+      .map(file => path.resolve(gitRootDir, file))
+      .filter(file => existsSync(file));
   } catch (error) {
-    console.error("Error retrieving files from commit:", error);
+    console.error('Error retrieving files from commit:', error);
     return [];
   }
 }
@@ -55,10 +54,10 @@ export default async function duplicateFinder(
 ) {
   const allFiles = await getAllFiles(folderPath);
 
-  const msbFiles = allFiles.filter((file) => file.endsWith(".msb"));
+  const msbFiles = allFiles.filter(file => file.endsWith('.msb'));
 
   if (msbFiles.length === 0) {
-    console.log("No MSB files found");
+    console.log('No MSB files found');
     return;
   }
 
@@ -67,14 +66,10 @@ export default async function duplicateFinder(
 
   if (commitHash) {
     if (!commitExists(commitHash, folderPath)) {
-      console.error(
-        `Commit ${commitHash} does not exist. Proceeding without commit filtering.`
-      );
+      console.error(`Commit ${commitHash} does not exist. Proceeding without commit filtering.`);
     } else {
       filesFromCommit = getFilesAddedInCommit(commitHash, folderPath);
-      console.log(
-        `Found ${filesFromCommit.length} MSB files added in commit ${commitHash}`
-      );
+      console.log(`Found ${filesFromCommit.length} MSB files added in commit ${commitHash}`);
     }
   }
 
@@ -92,12 +87,12 @@ export default async function duplicateFinder(
     process.stdout.write(`Processed ${i}/${msbFiles.length}\r`);
     i++;
   }
-  process.stdout.write("\n");
+  process.stdout.write('\n');
 
-  const duplicates = Object.values(hashes).filter((files) => files.length > 1);
+  const duplicates = Object.values(hashes).filter(files => files.length > 1);
 
   if (duplicates.length === 0) {
-    console.log("No duplicates found");
+    console.log('No duplicates found');
     return;
   }
 
@@ -115,20 +110,18 @@ export default async function duplicateFinder(
   if (commitHash && filesFromCommit.length > 0) {
     for await (const files of duplicates) {
       // Check if any files in this set are from the commit
-      const filesWithCommitInfo = files.map((file) => ({
+      const filesWithCommitInfo = files.map(file => ({
         path: file,
         isFromCommit: filesFromCommit.includes(file),
       }));
 
-      const anyFromCommit = filesWithCommitInfo.some(
-        (file) => file.isFromCommit
-      );
+      const anyFromCommit = filesWithCommitInfo.some(file => file.isFromCommit);
 
       if (anyFromCommit) {
-        console.log("\n=== Duplicate Set ===");
+        console.log('\n=== Duplicate Set ===');
         // Show files and mark which are from commit
         for (const file of filesWithCommitInfo) {
-          const marker = file.isFromCommit ? " [FROM COMMIT]" : "";
+          const marker = file.isFromCommit ? ' [FROM COMMIT]' : '';
           console.log(`${file.path}${marker}`);
         }
 

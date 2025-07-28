@@ -1,5 +1,5 @@
-import ICrypter from "./crypter";
-import Rand32 from "./rand32";
+import ICrypter from './crypter';
+import Rand32 from './rand32';
 
 export default class TableCrypter implements ICrypter {
   private static readonly INDEX = 3;
@@ -30,11 +30,7 @@ export default class TableCrypter implements ICrypter {
     this.encryptRange(src, 0, src.length);
   }
 
-  public encryptRange(
-    src: Uint8Array,
-    start: number = 0,
-    end: number = src.length
-  ): void {
+  public encryptRange(src: Uint8Array, start: number = 0, end: number = src.length): void {
     for (let i = start; i < end; i++) {
       src[i] = this.encrypted[src[i]];
     }
@@ -44,11 +40,7 @@ export default class TableCrypter implements ICrypter {
     this.decryptRange(src, 0, src.length);
   }
 
-  public decryptRange(
-    src: Uint8Array,
-    start: number = 0,
-    end: number = src.length
-  ): void {
+  public decryptRange(src: Uint8Array, start: number = 0, end: number = src.length): void {
     for (let i = start; i < end; i++) {
       src[i] = this.decrypted[src[i]];
     }

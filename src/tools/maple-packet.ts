@@ -1,5 +1,5 @@
-import ByteReader from "./byte-reader";
-import { MapleLocale } from "./maple-locale";
+import ByteReader from './byte-reader';
+import { MapleLocale } from './maple-locale';
 
 export default class MaplePacket {
   public timestamp: Date;
@@ -11,13 +11,7 @@ export default class MaplePacket {
   private readonly buffer: Uint8Array;
   private readonly reader: ByteReader;
 
-  constructor(
-    timestamp: Date,
-    outbound: boolean,
-    version: number,
-    opcode: number,
-    buffer: Uint8Array
-  ) {
+  constructor(timestamp: Date, outbound: boolean, version: number, opcode: number, buffer: Uint8Array) {
     this.timestamp = timestamp;
     this.outbound = outbound;
     this.version = version;
@@ -63,10 +57,7 @@ export default class MaplePacket {
   }
 
   getReadSegment(length: number): Uint8Array {
-    return this.buffer.slice(
-      this.reader.position,
-      this.reader.position + length
-    );
+    return this.buffer.slice(this.reader.position, this.reader.position + length);
   }
 
   getSegment(offset: number, length: number): Uint8Array {
@@ -115,13 +106,13 @@ export default class MaplePacket {
 
   private toHexString(): string {
     return Array.from(this.buffer)
-      .map((byte) => byte.toString(16).toUpperCase().padStart(2, "0"))
-      .join(" ");
+      .map(byte => byte.toString(16).toUpperCase().padStart(2, '0'))
+      .join(' ');
   }
 
   toString(): string {
     return `[${this.timestamp.toISOString()}][${
-      this.outbound ? "OUT" : "IN "
+      this.outbound ? 'OUT' : 'IN '
     }] [${this.opcode.toString(16).toUpperCase()}] ${this.toHexString()}`;
   }
 }

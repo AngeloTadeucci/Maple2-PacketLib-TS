@@ -1,10 +1,10 @@
-import ByteReader from "../tools/byte-reader";
-import ByteWriter from "../tools/byte-writer";
-import ICrypter from "./crypter";
-import Rand32 from "./rand32";
-import RearrangeCrypter from "./rearrange-crypter";
-import TableCrypter from "./table-crypter";
-import XORCrypter from "./xor-crypter";
+import ByteReader from '../tools/byte-reader';
+import ByteWriter from '../tools/byte-writer';
+import ICrypter from './crypter';
+import Rand32 from './rand32';
+import RearrangeCrypter from './rearrange-crypter';
+import TableCrypter from './table-crypter';
+import XORCrypter from './xor-crypter';
 
 export default class MapleCipher {
   private static readonly HEADER_SIZE = 6;
@@ -54,11 +54,7 @@ export default class MapleCipher {
       return encSeq;
     }
 
-    public writeHeader(
-      packet: Uint8Array,
-      offset: number,
-      length: number
-    ): ByteWriter {
+    public writeHeader(packet: Uint8Array, offset: number, length: number): ByteWriter {
       const encSeq = this.encodeSeqBase();
 
       const writer = new ByteWriter(length + MapleCipher.HEADER_SIZE);
@@ -69,18 +65,10 @@ export default class MapleCipher {
       return writer;
     }
 
-    public encrypt(
-      packet: Uint8Array,
-      offset: number,
-      length: number
-    ): ByteWriter {
+    public encrypt(packet: Uint8Array, offset: number, length: number): ByteWriter {
       const result = this.writeHeader(packet, offset, length);
       for (const crypter of this.encryptSeq) {
-        crypter.encryptRange(
-          result.buffer,
-          MapleCipher.HEADER_SIZE,
-          MapleCipher.HEADER_SIZE + length
-        );
+        crypter.encryptRange(result.buffer, MapleCipher.HEADER_SIZE, MapleCipher.HEADER_SIZE + length);
       }
 
       return result;
@@ -130,12 +118,7 @@ export default class MapleCipher {
       }
 
       const data = new Uint8Array(packetSize);
-      data.set(
-        buffer.slice(
-          MapleCipher.HEADER_SIZE,
-          MapleCipher.HEADER_SIZE + packetSize
-        )
-      );
+      data.set(buffer.slice(MapleCipher.HEADER_SIZE, MapleCipher.HEADER_SIZE + packetSize));
       for (const crypter of this.decryptSeq) {
         crypter.decryptRange(data, 0, packetSize);
       }

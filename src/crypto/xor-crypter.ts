@@ -1,5 +1,5 @@
-import ICrypter from "./crypter";
-import Rand32 from "./rand32";
+import ICrypter from './crypter';
+import Rand32 from './rand32';
 
 class XORCrypter implements ICrypter {
   private static readonly INDEX: number = 2;

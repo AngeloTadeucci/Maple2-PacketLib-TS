@@ -16,18 +16,9 @@ export default class Rand32 {
   }
 
   public random(): number {
-    this.s1 =
-      ((this.s1 << 12) & 0xffffe000) ^
-      ((this.s1 >> 6) & 0x00001fff) ^
-      (this.s1 >> 19);
-    this.s2 =
-      ((this.s2 << 4) & 0xffffff80) ^
-      ((this.s2 >> 23) & 0x0000007f) ^
-      (this.s2 >> 25);
-    this.s3 =
-      ((this.s3 << 17) & 0xffe00000) ^
-      ((this.s3 >> 8) & 0x001fffff) ^
-      (this.s3 >> 11);
+    this.s1 = ((this.s1 << 12) & 0xffffe000) ^ ((this.s1 >> 6) & 0x00001fff) ^ (this.s1 >> 19);
+    this.s2 = ((this.s2 << 4) & 0xffffff80) ^ ((this.s2 >> 23) & 0x0000007f) ^ (this.s2 >> 25);
+    this.s3 = ((this.s3 << 17) & 0xffe00000) ^ ((this.s3 >> 8) & 0x001fffff) ^ (this.s3 >> 11);
 
     return this.s1 ^ this.s2 ^ this.s3;
   }

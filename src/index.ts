@@ -1,2 +1,2 @@
-export * from "./tools/file-loader";
-export * from "./commands/metadata-builder";
+export * from './tools/file-loader';
+export * from './commands/metadata-builder';

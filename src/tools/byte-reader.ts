@@ -88,11 +88,11 @@ export default class ByteReader {
 
   public readRawString(length: number): string {
     if (length === 0) {
-      return "";
+      return '';
     }
 
     this.checkLength(length);
-    const value = new TextDecoder("utf-8").decode(this.buffer.slice(this.position, this.position + length));
+    const value = new TextDecoder('utf-8').decode(this.buffer.slice(this.position, this.position + length));
     this.position += length;
     return value;
   }
@@ -104,11 +104,11 @@ export default class ByteReader {
 
   public readRawUnicodeString(length: number): string {
     if (length === 0) {
-      return "";
+      return '';
     }
 
     this.checkLength(length * 2);
-    const value = new TextDecoder("utf-16le").decode(this.buffer.slice(this.position, this.position + length * 2));
+    const value = new TextDecoder('utf-16le').decode(this.buffer.slice(this.position, this.position + length * 2));
     this.position += length * 2;
     return value;
   }
@@ -124,7 +124,7 @@ export default class ByteReader {
 
   public toString(): string {
     return Array.from(this.buffer)
-      .map((byte) => byte.toString(16).padStart(2, "0"))
-      .join(" ");
+      .map(byte => byte.toString(16).padStart(2, '0'))
+      .join(' ');
   }
 }

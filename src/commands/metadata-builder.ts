@@ -1,7 +1,7 @@
-import { unlink, writeFile } from "node:fs/promises";
-import MsbReader from "../tools/file-loader";
-import { getAllFiles, hashFile } from "../utils/helpers";
-import path from "node:path";
+import { unlink, writeFile } from 'node:fs/promises';
+import MsbReader from '../tools/file-loader';
+import { getAllFiles, hashFile } from '../utils/helpers';
+import path from 'node:path';
 
 interface MetadataCache {
   path: string;
@@ -19,10 +19,10 @@ interface Packet {
 export async function createMetadataCache(folderPath: string): Promise<void> {
   const allFiles = await getAllFiles(folderPath);
 
-  const msbFiles = allFiles.filter((file) => file.endsWith(".msb"));
+  const msbFiles = allFiles.filter(file => file.endsWith('.msb'));
 
   if (msbFiles.length === 0) {
-    console.log("No MSB files found");
+    console.log('No MSB files found');
     return;
   }
 
@@ -42,7 +42,7 @@ export async function createMetadataCache(folderPath: string): Promise<void> {
       continue;
     }
 
-    const filterPackets = filePackets.filter((packet) => {
+    const filterPackets = filePackets.filter(packet => {
       if (!packet.outbound) {
         switch (packet.opcode) {
           case 0x11:
@@ -71,9 +71,7 @@ export async function createMetadataCache(folderPath: string): Promise<void> {
         continue;
       }
 
-      const key = `${packet.opcode}-${
-        packet.outbound ? "outbound" : "inbound"
-      }`;
+      const key = `${packet.opcode}-${packet.outbound ? 'outbound' : 'inbound'}`;
       const existingPacket = cachePackets[key];
 
       const mode = packet.readByte();
@@ -100,19 +98,19 @@ export async function createMetadataCache(folderPath: string): Promise<void> {
       packets: cachePackets,
     });
   }
-  process.stdout.write("\n");
+  process.stdout.write('\n');
 
-  console.log("Finished reading all files");
+  console.log('Finished reading all files');
 
   // write metadata cache to file
   if (metadataCache.length === 0) {
-    console.log("No metadata to cache");
+    console.log('No metadata to cache');
     return;
   }
 
   // Determine the correct folder path for the metadata file
-  const targetPath = folderPath === "." ? process.cwd() : folderPath;
-  const metadataCacheFile = path.join(targetPath, "metadata-cache.json");
+  const targetPath = folderPath === '.' ? process.cwd() : folderPath;
+  const metadataCacheFile = path.join(targetPath, 'metadata-cache.json');
 
   // Check if metadata cache file exists in the target directory
   const metadataCacheFileExists = allFiles.includes(metadataCacheFile);

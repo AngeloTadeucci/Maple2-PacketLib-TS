@@ -1,4 +1,4 @@
-import ICrypter from "./crypter";
+import ICrypter from './crypter';
 
 export default class RearrangeCrypter implements ICrypter {
   private static readonly INDEX: number = 1;

@@ -41,16 +41,16 @@ To read and parse an MSB file, use the `MsbReader` class:
 The `MsbReader` class automatically extracts metadata upon initialization:
 
 ```typescript
-const msbReader = new MsbReader("path/to/file.msb");
+const msbReader = new MsbReader('path/to/file.msb');
 console.log(msbReader.metadata);
 ```
 
 To read the packets, use the function `readPackets`:
 
 ```typescript
-import { MsbReader } from "./src/tools/file-loader";
+import { MsbReader } from './src/tools/file-loader';
 
-const msbReader = new MsbReader("path/to/file.msb");
+const msbReader = new MsbReader('path/to/file.msb');
 const packets = msbReader.readPackets();
 console.log(packets);
 ```
