@@ -47,9 +47,11 @@ export default class TableCrypter implements ICrypter {
   }
 
   private static shuffle(data: Uint8Array, version: number): void {
-    const rand32 = new Rand32(Math.pow(version, 2));
+    const seed = Math.pow(version, 2) >>> 0;
+    const rand32 = new Rand32(seed);
     for (let i = TableCrypter.TABLE_SIZE - 1; i >= 1; i--) {
-      const rand = rand32.random() % (i + 1);
+      const randValue = rand32.random();
+      const rand = randValue % (i + 1) & 0xff;
 
       const swap = data[i];
       data[i] = data[rand];

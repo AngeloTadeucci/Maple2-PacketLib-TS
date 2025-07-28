@@ -9,11 +9,14 @@ class XORCrypter implements ICrypter {
     this.table = new Uint8Array(2);
 
     // Init
-    const rand1 = new Rand32(version);
-    const rand2 = new Rand32(2 * version);
+    const rand1 = new Rand32(version >>> 0);
+    const rand2 = new Rand32((2 * version) >>> 0);
 
-    this.table[0] = Math.floor(rand1.randomFloat() * 255);
-    this.table[1] = Math.floor(rand2.randomFloat() * 255);
+    const float1 = rand1.randomFloat();
+    const float2 = rand2.randomFloat();
+
+    this.table[0] = Math.floor(float1 * 255.0) & 0xff;
+    this.table[1] = Math.floor(float2 * 255.0) & 0xff;
   }
 
   public static getIndex(version: number): number {

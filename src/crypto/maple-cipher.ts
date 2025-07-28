@@ -91,7 +91,9 @@ export default class MapleCipher {
     }
 
     public decodeSeqBase(encSeq: number): number {
-      const decSeq = (this.cipher.iv >>> 16) ^ encSeq;
+      const shifted = this.cipher.iv >>> 16;
+      const decSeq = (shifted ^ encSeq) & 0xffff;
+
       this.cipher.advanceIV();
       return decSeq;
     }
@@ -117,8 +119,7 @@ export default class MapleCipher {
         throw new Error(`Packet has invalid sequence header: ${decSeq}`);
       }
 
-      const data = new Uint8Array(packetSize);
-      data.set(buffer.slice(MapleCipher.HEADER_SIZE, MapleCipher.HEADER_SIZE + packetSize));
+      const data = buffer.slice(MapleCipher.HEADER_SIZE, rawPacketSize);
       for (const crypter of this.decryptSeq) {
         crypter.decryptRange(data, 0, packetSize);
       }
