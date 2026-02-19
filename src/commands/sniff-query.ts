@@ -13,6 +13,7 @@ interface QueryOptions {
   index: number | null;
   range: { start: number; end: number } | null;
   searchHex: Uint8Array | null;
+  localeOverride: string | null; // e.g. 'kms2', 'gms2', or a numeric string
 }
 
 interface PacketEntry {
@@ -43,6 +44,7 @@ export function parseSniffQueryArgs(args: string[]): { filePath: string; options
     index: null,
     range: null,
     searchHex: null,
+    localeOverride: null,
   };
 
   let filePath = '';
@@ -74,6 +76,8 @@ export function parseSniffQueryArgs(args: string[]): { filePath: string; options
         .split(/\s+/)
         .map(b => parseInt(b, 16));
       if (!bytes.some(isNaN)) options.searchHex = new Uint8Array(bytes);
+    } else if (arg === '--locale' && i + 1 < args.length) {
+      options.localeOverride = args[++i];
     } else if (!arg.startsWith('-') && !filePath) {
       filePath = arg;
     }
@@ -81,6 +85,17 @@ export function parseSniffQueryArgs(args: string[]): { filePath: string; options
   }
 
   return { filePath, options };
+}
+
+function resolveLocale(localeOverride: string | null, fileLocale: number): number {
+  if (localeOverride === null) return fileLocale;
+  const lower = localeOverride.toLowerCase();
+  if (lower === 'kms2' || lower === 'korea' || lower === 'kr') return 1;
+  if (lower === 'gms2' || lower === 'global' || lower === 'en') return 8;
+  const num = parseInt(localeOverride, 10);
+  if (!isNaN(num)) return num;
+  console.warn(`Warning: Unknown locale "${localeOverride}", using file locale.`);
+  return fileLocale;
 }
 
 function resolveOpcodeFilter(opcodeArgs: string[], locale: number): number[] {
@@ -134,7 +149,7 @@ async function runQuery(filePath: string, options: QueryOptions): Promise<void> 
   }
 
   const reader = new MsbReader(filePath);
-  const locale = reader.metadata?.Locale ?? 0;
+  const locale = resolveLocale(options.localeOverride, reader.metadata?.Locale ?? 0);
   const opcodeFilter = resolveOpcodeFilter(options.opcodeArgs, locale);
 
   const metadata = {

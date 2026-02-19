@@ -44,7 +44,7 @@ const commands: { [key: string]: Command } = {
   },
   'sniff-query': {
     description: 'Query and filter packets from an MSB sniff file',
-    howTo: 'sniff-query <file.msb> [--summary] [--opcode <hex|name>] [--direction IN|OUT] [--limit <n>] [--index <n>] [--range <n-m>] [--search-hex "<XX XX>"] [--no-hex] [--hex-limit <n>]',
+    howTo: 'sniff-query <file.msb> [--summary] [--opcode <hex|name>] [--direction IN|OUT] [--locale <gms2|kms2|N>] [--limit <n>] [--index <n>] [--range <n-m>] [--search-hex "<XX XX>"] [--no-hex] [--hex-limit <n>]',
     execute: async (filePath: string, args: string[]) => {
       await sniffQuery(filePath, args);
     },
