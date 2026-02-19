@@ -50,11 +50,42 @@ export default class MsbReader {
       return this.packets;
     }
 
+    const packets: MaplePacket[] = [];
+    for (const packet of this.readPacketsLazy()) {
+      packets.push(packet);
+    }
+
+    this.packets = packets;
+    return this.packets;
+  }
+
+  /**
+   * Lazily reads packets one at a time using a generator, avoiding loading the entire file into memory.
+   * Useful for large files where you want to filter or stop early.
+   *
+   * @yields {MaplePacket} Each packet as it is read from the file.
+   * @throws {Error} Throws an error if metadata is not initialized or if reading fails.
+   *
+   * @example
+   * ```typescript
+   * const reader = new MsbReader('path/to/file.msb');
+   * for (const packet of reader.readPacketsLazy()) {
+   *   if (packet.opcode === 0x0020) {
+   *     console.log(packet.toString());
+   *     break; // stop early — no wasted I/O
+   *   }
+   * }
+   * ```
+   */
+  public *readPacketsLazy(): Generator<MaplePacket> {
+    if (this.packets) {
+      yield* this.packets;
+      return;
+    }
+
     if (this.version === undefined || this.metadata === undefined) {
       throw new Error('Metadata not initialized!?');
     }
-
-    const packets: MaplePacket[] = [];
 
     try {
       while (this.reader.offset < this.reader.binary.length) {
@@ -77,19 +108,13 @@ export default class MsbReader {
         }
 
         const msSinceUnixEpoch = (timestamp - this.TICKS_AT_EPOCH) / this.TICKS_PER_MILLISECOND;
-
         const date = new Date(Number(msSinceUnixEpoch));
 
-        const packet = new MaplePacket(date, outbound, this.metadata.Build, opcode, buffer);
-        packets.push(packet);
+        yield new MaplePacket(date, outbound, this.metadata.Build, opcode, buffer);
       }
     } catch (error) {
       throw new Error(`Failed to read packets: ${error}`);
     }
-
-    this.packets = packets;
-
-    return this.packets;
   }
 
   private readMetadata(): [number, MsbMetadata] {

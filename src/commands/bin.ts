@@ -3,6 +3,7 @@
 import { existsSync } from 'fs';
 import duplicateFinder from './duplicate-finder';
 import { createMetadataCache } from './metadata-builder';
+import { sniffQuery } from './sniff-query';
 import versionFinder from './version-finder';
 
 interface Command {
@@ -39,6 +40,13 @@ const commands: { [key: string]: Command } = {
       }
 
       await versionFinder(folderPath, version);
+    },
+  },
+  'sniff-query': {
+    description: 'Query and filter packets from an MSB sniff file',
+    howTo: 'sniff-query <file.msb> [--summary] [--opcode <hex|name>] [--direction IN|OUT] [--limit <n>] [--index <n>] [--range <n-m>] [--search-hex "<XX XX>"] [--no-hex] [--hex-limit <n>]',
+    execute: async (filePath: string, args: string[]) => {
+      await sniffQuery(filePath, args);
     },
   },
 };
