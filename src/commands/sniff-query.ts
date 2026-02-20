@@ -3,7 +3,7 @@ import MsbReader from '../tools/file-loader';
 import MaplePacket from '../tools/maple-packet';
 import { getServerVersion, resolveOpcodeName, resolveOpcodeNumber } from '../tools/opcode-resolver';
 
-interface QueryOptions {
+export interface QueryOptions {
   summary: boolean;
   opcodeArgs: string[]; // raw args: hex, decimal, or name — resolved after locale is known
   direction: 'IN' | 'OUT' | null;
@@ -16,7 +16,7 @@ interface QueryOptions {
   localeOverride: string | null; // e.g. 'kms2', 'gms2', or a numeric string
 }
 
-interface PacketEntry {
+export interface PacketEntry {
   index: number;
   timestamp: string;
   direction: 'IN' | 'OUT';
@@ -87,7 +87,7 @@ export function parseSniffQueryArgs(args: string[]): { filePath: string; options
   return { filePath, options };
 }
 
-function resolveLocale(localeOverride: string | null, fileLocale: number): number {
+export function resolveLocale(localeOverride: string | null, fileLocale: number): number {
   if (localeOverride === null) return fileLocale;
   const lower = localeOverride.toLowerCase();
   if (lower === 'kms2' || lower === 'korea' || lower === 'kr') return 1;
@@ -98,7 +98,7 @@ function resolveLocale(localeOverride: string | null, fileLocale: number): numbe
   return fileLocale;
 }
 
-function resolveOpcodeFilter(opcodeArgs: string[], locale: number): number[] {
+export function resolveOpcodeFilter(opcodeArgs: string[], locale: number): number[] {
   return opcodeArgs
     .map(raw => {
       const hexMatch = raw.match(/^(?:0x)?([0-9a-fA-F]+)$/);
@@ -111,7 +111,7 @@ function resolveOpcodeFilter(opcodeArgs: string[], locale: number): number[] {
     .filter((n): n is number => n !== null);
 }
 
-function formatHex(packet: MaplePacket, hexLimit: number): string {
+export function formatHex(packet: MaplePacket, hexLimit: number): string {
   const buffer = packet.getSegment(0, packet.length);
   const count = Math.min(buffer.length, hexLimit);
   const bytes: string[] = [];
@@ -123,7 +123,7 @@ function formatHex(packet: MaplePacket, hexLimit: number): string {
   return result;
 }
 
-function matchesFilters(packet: MaplePacket, opcodeFilter: number[], options: QueryOptions): boolean {
+export function matchesFilters(packet: MaplePacket, opcodeFilter: number[], options: QueryOptions): boolean {
   if (options.direction) {
     const outbound = options.direction === 'OUT';
     if (packet.outbound !== outbound) return false;

@@ -4,6 +4,7 @@ import { existsSync } from 'fs';
 import duplicateFinder from './duplicate-finder';
 import { createMetadataCache } from './metadata-builder';
 import { sniffQuery } from './sniff-query';
+import { sniffSearch } from './sniff-search';
 import versionFinder from './version-finder';
 
 interface Command {
@@ -47,6 +48,13 @@ const commands: { [key: string]: Command } = {
     howTo: 'sniff-query <file.msb> [--summary] [--opcode <hex|name>] [--direction IN|OUT] [--locale <gms2|kms2|N>] [--limit <n>] [--index <n>] [--range <n-m>] [--search-hex "<XX XX>"] [--no-hex] [--hex-limit <n>]',
     execute: async (filePath: string, args: string[]) => {
       await sniffQuery(filePath, args);
+    },
+  },
+  'sniff-search': {
+    description: 'Search for packets matching a filter across all MSB sniff files in a folder',
+    howTo: 'sniff-search <folder> [--opcode <hex|name>] [--direction IN|OUT] [--locale <gms2|kms2|N>] [--limit <n>] [--search-hex "<XX XX>"] [--no-hex] [--hex-limit <n>]',
+    execute: async (folderPath: string, args: string[]) => {
+      await sniffSearch(folderPath, args);
     },
   },
 };
